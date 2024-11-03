@@ -20,14 +20,14 @@ namespace XRData
         
             var config = GetSingleton<GraphConfig>();
         
-            for (int i = 0; i < config.size; i++)
+            for (int i = 0; i < config.dimensionSize; i++)
             {
-                for (int j = 0; j < config.size; j++)
+                for (int j = 0; j < config.dimensionSize; j++)
                 {
                     var point = EntityManager.Instantiate(config.pointPrefab);
                     EntityManager.AddComponentData(point, new Parent
                     {
-                        Value = config.graphTransform
+                        Value = config.graphPointsTransform
                     });
                     EntityManager.SetComponentData(point, new LocalTransform
                     {
