@@ -38,7 +38,7 @@ namespace XRData
                 localTransform.Position =
                     new float3(
                         coordinates.xz[0] * spacing + spacing/2, 
-                        0.8f+0.2f*math.sin(time + coordinates.xz[0] * spacing + coordinates.xz[1] * spacing), 
+                        1f+0.77f*math.sin(time + coordinates.xz[0] * spacing + coordinates.xz[1] * spacing/3), 
                         coordinates.xz[1] * spacing + spacing/2);
             }
         }
