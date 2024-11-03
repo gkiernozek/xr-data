@@ -25,6 +25,10 @@ namespace XRData
                 for (int j = 0; j < config.size; j++)
                 {
                     var point = EntityManager.Instantiate(config.pointPrefab);
+                    EntityManager.AddComponentData(point, new Parent
+                    {
+                        Value = config.graphTransform
+                    });
                     EntityManager.SetComponentData(point, new LocalTransform
                     {
                         Position = new float3(i * config.spacing, 0, j * config.spacing),
