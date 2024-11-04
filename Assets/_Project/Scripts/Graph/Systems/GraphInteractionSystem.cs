@@ -59,8 +59,8 @@ namespace XRData
                     }
                 }
 
-                float scale = 2.0f / (1.0f + minDistance*minDistance);
-                scale = math.clamp(scale, 0.25f, 1.0f);
+                float scale = 1.0f / (1.0f + math.pow(minDistance*2, 3));
+                scale = math.clamp(scale, 0.15f, 0.7f);
                 localTransform.Scale = scale;
             }
         }
