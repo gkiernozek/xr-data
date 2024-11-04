@@ -1,3 +1,4 @@
+using System;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -5,6 +6,7 @@ using Unity.Transforms;
 
 namespace XRData
 {
+    [BurstCompile]
     public partial class PointsSpawnSystem : SystemBase
     {
         [BurstCompile]
@@ -18,11 +20,11 @@ namespace XRData
         {
             Enabled = false;
         
-            var config = GetSingleton<GraphConfig>();
+            var config = SystemAPI.GetSingleton<GraphConfig>();
         
-            for (int i = 0; i < config.dimensionSize; i++)
+            for (var i = 0; i < config.dimensionSize; i++)
             {
-                for (int j = 0; j < config.dimensionSize; j++)
+                for (var j = 0; j < config.dimensionSize; j++)
                 {
                     var point = EntityManager.Instantiate(config.pointPrefab);
                     EntityManager.AddComponentData(point, new Parent

@@ -11,14 +11,14 @@ namespace XRData
         public Entity graphPointsTransform;
     }
 
-    class GraphConfigAuthoring : MonoBehaviour
+    internal class GraphConfigAuthoring : MonoBehaviour
     {
         public float dimensionSize;
         public float spacing;
         public GameObject pointPrefab;
         public GameObject graphPointsTransform;
-    
-        class GraphConfigAuthoringBaker : Baker<GraphConfigAuthoring>
+
+        private class GraphConfigAuthoringBaker : Baker<GraphConfigAuthoring>
         {
             public override void Bake(GraphConfigAuthoring authoring)
             {

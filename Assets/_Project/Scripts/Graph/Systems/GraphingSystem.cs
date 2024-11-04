@@ -19,7 +19,7 @@ namespace XRData
         {
             var config = SystemAPI.GetSingleton<GraphConfig>();
 
-            GraphUpdateJob graphUpdateJob = new GraphUpdateJob
+            var graphUpdateJob = new GraphUpdateJob
             {
                 time = (float)SystemAPI.Time.ElapsedTime,
                 spacing = config.spacing
@@ -33,7 +33,7 @@ namespace XRData
             public float time;
             public float spacing;
 
-            public void Execute(ref LocalTransform localTransform, in Coordinates coordinates)
+            private void Execute(ref LocalTransform localTransform, in Coordinates coordinates)
             {
                 localTransform.Position =
                     new float3(
