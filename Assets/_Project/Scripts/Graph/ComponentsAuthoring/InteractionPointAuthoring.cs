@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace XRData
 {
+    //used for tests within subscene, now overriden logically by XRInteractionPoints
     public struct InteractionPoint : IComponentData
     {
     }

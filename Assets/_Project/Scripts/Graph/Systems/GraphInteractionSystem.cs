@@ -14,6 +14,7 @@ namespace XRData
             state.RequireForUpdate<InteractionPoint>();
             state.RequireForUpdate<Coordinates>();
             state.RequireForUpdate<GraphConfig>();
+            state.RequireForUpdate<XRInteractionPointsData>();
         }
 
         [BurstCompile]
@@ -23,23 +24,20 @@ namespace XRData
             var graphPointsTransform = graphConfig.graphPointsTransform;
             float4x4 graphPointsTransformMatrix = SystemAPI.GetComponent<LocalToWorld>(graphPointsTransform).Value;
 
-            
-            NativeList<float3> interactionPointPositions = new NativeList<float3>(Allocator.TempJob);
-            
-            foreach((RefRO<InteractionPoint> _, RefRO<LocalTransform> localTransform) in SystemAPI.Query<RefRO<InteractionPoint>,RefRO<LocalTransform>>())
-            {
-                float3 localInteractionPointPosition = math.transform(math.inverse(graphPointsTransformMatrix), localTransform.ValueRO.Position);
+            var xrInteractionPointsData = SystemAPI.GetSingleton<XRInteractionPointsData>();
+            NativeList<float3> interactionPointPositions = xrInteractionPointsData.XRInteractionPositions;
 
-                interactionPointPositions.Add(localInteractionPointPosition);
+            for (int i = 0; i < interactionPointPositions.Length; i++)
+            {
+                interactionPointPositions[i] = math.transform(math.inverse(graphPointsTransformMatrix), interactionPointPositions[i]);
             }
-            
+
             InteractionUpdateJob interactionUpdateJob = new InteractionUpdateJob
             {
                 interactionPointPositions = interactionPointPositions
             };
                 
             interactionUpdateJob.ScheduleParallel(state.Dependency).Complete();
-            interactionPointPositions.Dispose();
         }
         
         [BurstCompile]
@@ -52,7 +50,7 @@ namespace XRData
                 float3 entityPosition = localTransform.Position;
                 float minDistance = float.MaxValue;
 
-                // Scale based on the distance to the closest interaction point
+                // Graph point scale is based on the distance to the closest interaction point
                 foreach (float3 interactionPoint in interactionPointPositions)
                 {
                     float distance = math.distance(entityPosition, interactionPoint);
