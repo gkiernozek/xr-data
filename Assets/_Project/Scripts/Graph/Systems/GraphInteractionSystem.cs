@@ -11,7 +11,6 @@ namespace XRData
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<InteractionPoint>();
             state.RequireForUpdate<Coordinates>();
             state.RequireForUpdate<GraphConfig>();
             state.RequireForUpdate<XRInteractionPointsData>();
