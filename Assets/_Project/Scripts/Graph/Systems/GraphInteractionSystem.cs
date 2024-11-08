@@ -11,9 +11,10 @@ namespace XRData
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<Coordinates>();
+            state.RequireForUpdate<CoordinatesComponent>();
             state.RequireForUpdate<GraphConfig>();
-            state.RequireForUpdate<XRInteractionPointsData>();
+            state.RequireForUpdate<XRInteractionPointsDataComponent>();
+            state.RequireForUpdate<GraphPivotTransformData>();
         }
 
         [BurstCompile]
@@ -21,9 +22,19 @@ namespace XRData
         {
             var graphConfig = SystemAPI.GetSingleton<GraphConfig>();
             var graphPointsTransform = graphConfig.graphPointsTransform;
+            
+            //update graph entity position and rotation first
+            var graphPointsTransformLocalTransform = SystemAPI.GetComponent<LocalTransform>(graphPointsTransform);
+            var graphPivotTransformData = SystemAPI.GetSingleton<GraphPivotTransformData>();
+            graphPointsTransformLocalTransform.Position = graphPivotTransformData.position;
+            graphPointsTransformLocalTransform.Rotation = graphPivotTransformData.rotation;
+            graphPointsTransformLocalTransform.Scale = graphPivotTransformData.scale.x;
+            
+            SystemAPI.SetComponent(graphPointsTransform, graphPointsTransformLocalTransform);
+            
             var graphPointsTransformMatrix = SystemAPI.GetComponent<LocalToWorld>(graphPointsTransform).Value;
 
-            var xrInteractionPointsData = SystemAPI.GetSingleton<XRInteractionPointsData>();
+            var xrInteractionPointsData = SystemAPI.GetSingleton<XRInteractionPointsDataComponent>();
             var interactionPointPositions = xrInteractionPointsData.XRInteractionPositions;
 
             for (var i = 0; i < interactionPointPositions.Length; i++)
@@ -44,7 +55,7 @@ namespace XRData
         {
             [ReadOnly] public NativeList<float3> interactionPointPositions;
 
-            private void Execute(ref LocalTransform localTransform, in Coordinates coordinates)
+            private void Execute(ref LocalTransform localTransform, in CoordinatesComponent coordinatesComponent)
             {
                 var entityPosition = localTransform.Position;
                 var minDistance = float.MaxValue;

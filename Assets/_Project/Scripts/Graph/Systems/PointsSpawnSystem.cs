@@ -37,7 +37,7 @@ namespace XRData
                         Rotation = quaternion.identity,
                         Scale = 1f
                     });
-                    EntityManager.AddComponentData(point, new Coordinates
+                    EntityManager.AddComponentData(point, new CoordinatesComponent
                     {
                         xz = new int2(i, j)
                     });

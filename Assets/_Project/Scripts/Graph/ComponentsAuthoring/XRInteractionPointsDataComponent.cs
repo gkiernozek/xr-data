@@ -5,7 +5,7 @@ using Unity.Mathematics;
 
 namespace XRData
 {
-    public struct XRInteractionPointsData : IComponentData
+    public struct XRInteractionPointsDataComponent : IComponentData
     {
         public NativeList<float3> XRInteractionPositions;
     }
