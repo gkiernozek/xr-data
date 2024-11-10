@@ -1318,6 +1318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8818db0fa9ba417985cf017426aece0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphPointMaterial: {fileID: 2100000, guid: baba24e87146742f1b1e19f5975dd64f, type: 2}
 --- !u!4 &877599917
 Transform:
   m_ObjectHideFlags: 0

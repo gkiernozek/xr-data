@@ -33,7 +33,7 @@ Material:
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
-  m_LockedProperties: _Origin
+  m_LockedProperties: _Color0 _ColorY _Origin _Spread
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -117,7 +117,7 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _Origin: 0.77
+    - _Origin: 1.27
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
@@ -129,7 +129,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecSource: 0
     - _SpecularHighlights: 1
-    - _Spread: 0.125
+    - _Spread: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
