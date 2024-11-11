@@ -23,6 +23,13 @@ namespace XRData
             var graphConfig = SystemAPI.GetSingleton<GraphConfig>();
             var graphPointsTransform = graphConfig.graphPointsTransform;
             
+            GetInteractionPointsPositions(ref state, ref graphPointsTransform, out var interactionPointPositions);
+
+            ScheduleInteractionUpdateJob(ref state, interactionPointPositions);
+        }
+        
+        private void GetInteractionPointsPositions(ref SystemState state, ref Entity graphPointsTransform, out NativeList<float3> interactionPointPositions)
+        {
             //update graph entity position and rotation first
             var graphPointsTransformLocalTransform = SystemAPI.GetComponent<LocalTransform>(graphPointsTransform);
             var graphPivotTransformData = SystemAPI.GetSingleton<GraphPivotTransformData>();
@@ -35,18 +42,21 @@ namespace XRData
             var graphPointsTransformMatrix = SystemAPI.GetComponent<LocalToWorld>(graphPointsTransform).Value;
 
             var xrInteractionPointsData = SystemAPI.GetSingleton<XRInteractionPointsDataComponent>();
-            var interactionPointPositions = xrInteractionPointsData.XRInteractionPositions;
+            interactionPointPositions = xrInteractionPointsData.XRInteractionPositions;
 
             for (var i = 0; i < interactionPointPositions.Length; i++)
             {
                 interactionPointPositions[i] = math.transform(math.inverse(graphPointsTransformMatrix), interactionPointPositions[i]);
             }
-
+        }
+        
+        private void ScheduleInteractionUpdateJob(ref SystemState state, NativeList<float3> interactionPointPositions)
+        {
             var interactionUpdateJob = new InteractionUpdateJob
             {
                 interactionPointPositions = interactionPointPositions
             };
-                
+
             interactionUpdateJob.ScheduleParallel(state.Dependency).Complete();
         }
         

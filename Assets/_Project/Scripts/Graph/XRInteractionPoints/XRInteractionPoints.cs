@@ -25,6 +25,11 @@ namespace XRData
 
         private void Update()
         {
+            UpdateXRInteractionPointsDataComponent();
+        }
+
+        private void UpdateXRInteractionPointsDataComponent()
+        {
             interactionPositions.Clear();
 
             var xrInteractionPointsData = entityManager.GetComponentData<XRInteractionPointsDataComponent>(interactionPointsDataEntity);
@@ -40,7 +45,7 @@ namespace XRData
 
             entityManager.SetComponentData(interactionPointsDataEntity, xrInteractionPointsData);
         }
-        
+
         private void OnDestroy()
         {
             interactionPositions.Dispose();
