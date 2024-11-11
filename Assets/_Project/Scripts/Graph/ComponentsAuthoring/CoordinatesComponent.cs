@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-public struct Coordinates : IComponentData
+public struct CoordinatesComponent : IComponentData
 {
     public int2 xz;
 }

@@ -11,9 +11,10 @@ namespace XRData
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<Coordinates>();
+            state.RequireForUpdate<CoordinatesComponent>();
             state.RequireForUpdate<GraphConfig>();
-            state.RequireForUpdate<XRInteractionPointsData>();
+            state.RequireForUpdate<XRInteractionPointsDataComponent>();
+            state.RequireForUpdate<GraphPivotTransformData>();
         }
 
         [BurstCompile]
@@ -21,21 +22,41 @@ namespace XRData
         {
             var graphConfig = SystemAPI.GetSingleton<GraphConfig>();
             var graphPointsTransform = graphConfig.graphPointsTransform;
+            
+            GetInteractionPointsPositions(ref state, ref graphPointsTransform, out var interactionPointPositions);
+
+            ScheduleInteractionUpdateJob(ref state, interactionPointPositions);
+        }
+        
+        private void GetInteractionPointsPositions(ref SystemState state, ref Entity graphPointsTransform, out NativeList<float3> interactionPointPositions)
+        {
+            //update graph entity position and rotation first
+            var graphPointsTransformLocalTransform = SystemAPI.GetComponent<LocalTransform>(graphPointsTransform);
+            var graphPivotTransformData = SystemAPI.GetSingleton<GraphPivotTransformData>();
+            graphPointsTransformLocalTransform.Position = graphPivotTransformData.position;
+            graphPointsTransformLocalTransform.Rotation = graphPivotTransformData.rotation;
+            graphPointsTransformLocalTransform.Scale = graphPivotTransformData.scale.x;
+            
+            SystemAPI.SetComponent(graphPointsTransform, graphPointsTransformLocalTransform);
+            
             var graphPointsTransformMatrix = SystemAPI.GetComponent<LocalToWorld>(graphPointsTransform).Value;
 
-            var xrInteractionPointsData = SystemAPI.GetSingleton<XRInteractionPointsData>();
-            var interactionPointPositions = xrInteractionPointsData.XRInteractionPositions;
+            var xrInteractionPointsData = SystemAPI.GetSingleton<XRInteractionPointsDataComponent>();
+            interactionPointPositions = xrInteractionPointsData.XRInteractionPositions;
 
             for (var i = 0; i < interactionPointPositions.Length; i++)
             {
                 interactionPointPositions[i] = math.transform(math.inverse(graphPointsTransformMatrix), interactionPointPositions[i]);
             }
-
+        }
+        
+        private void ScheduleInteractionUpdateJob(ref SystemState state, NativeList<float3> interactionPointPositions)
+        {
             var interactionUpdateJob = new InteractionUpdateJob
             {
                 interactionPointPositions = interactionPointPositions
             };
-                
+
             interactionUpdateJob.ScheduleParallel(state.Dependency).Complete();
         }
         
@@ -44,7 +65,7 @@ namespace XRData
         {
             [ReadOnly] public NativeList<float3> interactionPointPositions;
 
-            private void Execute(ref LocalTransform localTransform, in Coordinates coordinates)
+            private void Execute(ref LocalTransform localTransform, in CoordinatesComponent coordinatesComponent)
             {
                 var entityPosition = localTransform.Position;
                 var minDistance = float.MaxValue;

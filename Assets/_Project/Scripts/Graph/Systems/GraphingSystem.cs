@@ -11,7 +11,7 @@ namespace XRData
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<GraphConfig>();
-            state.RequireForUpdate<Coordinates>();
+            state.RequireForUpdate<CoordinatesComponent>();
         }
 
         [BurstCompile]
@@ -33,14 +33,14 @@ namespace XRData
             public float time;
             public float spacing;
 
-            private void Execute(ref LocalTransform localTransform, in Coordinates coordinates)
+            private void Execute(ref LocalTransform localTransform, in CoordinatesComponent coordinatesComponent)
             {
                 localTransform.Position =
                     new float3(
-                        coordinates.xz[0] * spacing + spacing/2, 
+                        coordinatesComponent.xz[0] * spacing + spacing/2, 
                         //sine wave slightly rotated with offset above Y axis
-                        1f+0.77f*math.sin(time - coordinates.xz[0] * spacing - coordinates.xz[1] * spacing/3), 
-                        coordinates.xz[1] * spacing + spacing/2);
+                        1f+0.77f*math.sin(time - coordinatesComponent.xz[0] * spacing - coordinatesComponent.xz[1] * spacing/3), 
+                        coordinatesComponent.xz[1] * spacing + spacing/2);
             }
         }
     }

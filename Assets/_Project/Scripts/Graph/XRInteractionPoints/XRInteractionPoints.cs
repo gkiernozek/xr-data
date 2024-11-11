@@ -12,22 +12,27 @@ namespace XRData
         private NativeList<float3> interactionPositions { get; set; }
 
         private EntityManager entityManager;
-        private Entity interactionPointsEntity;
+        private Entity interactionPointsDataEntity;
 
         private void Awake()
         {
             interactionPositions = new NativeList<float3>(Allocator.Persistent);
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-            interactionPointsEntity = entityManager.CreateEntity(typeof(XRInteractionPointsData));
-            entityManager.SetComponentData(interactionPointsEntity, new XRInteractionPointsData { XRInteractionPositions = interactionPositions });
+            interactionPointsDataEntity = entityManager.CreateEntity(typeof(XRInteractionPointsDataComponent));
+            entityManager.SetComponentData(interactionPointsDataEntity, new XRInteractionPointsDataComponent { XRInteractionPositions = interactionPositions });
         }
 
         private void Update()
         {
+            UpdateXRInteractionPointsDataComponent();
+        }
+
+        private void UpdateXRInteractionPointsDataComponent()
+        {
             interactionPositions.Clear();
 
-            var xrInteractionPointsData = entityManager.GetComponentData<XRInteractionPointsData>(interactionPointsEntity);
+            var xrInteractionPointsData = entityManager.GetComponentData<XRInteractionPointsDataComponent>(interactionPointsDataEntity);
             xrInteractionPointsData.XRInteractionPositions.Clear();
             
             foreach (var interactionPoint in xrInteractionPoints)
@@ -38,9 +43,9 @@ namespace XRData
                 }
             }
 
-            entityManager.SetComponentData(interactionPointsEntity, xrInteractionPointsData);
+            entityManager.SetComponentData(interactionPointsDataEntity, xrInteractionPointsData);
         }
-        
+
         private void OnDestroy()
         {
             interactionPositions.Dispose();
