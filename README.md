@@ -6,14 +6,14 @@ A data representation example running on Quest 3 in XR mode.
 It shows graph of preset function with 10000 of data points.
 
 
-![Image](https://img.youtube.com/vi/ZLhM_BuFv7c/0.jpg)
-
 ## [V2 Video from Quest 3](https://youtube.com/watch/ZLhM_BuFv7c)
 
-![Image](https://img.youtube.com/vi/cbMDsphYAmU/0.jpg)
+![Image](https://img.youtube.com/vi/ZLhM_BuFv7c/0.jpg)
+
 
 ## [Video from Quest 3](https://www.youtube.com/watch?v=cbMDsphYAmU)
 
+![Image](https://img.youtube.com/vi/cbMDsphYAmU/0.jpg)
 
 ## Brief documentation
 
